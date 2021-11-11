@@ -5,31 +5,31 @@ namespace DzLogger
 {
     public class Starter
     {
-        private int _count = 100;
+        private const int Count = 100;
+        private Logger _logger = Logger.Instance;
+        private Actions _acts = new Actions();
         public void Run()
         {
-            var acts = new Actions();
             var rnd = new Random();
             var res = new Result();
-            var accptdLogStr = string.Empty;
-            for (var i = 0; i < _count; i++)
+            for (var i = 0; i < Count; i++)
             {
                 var chMeth = rnd.Next(1, 4);
                 res = chMeth switch
                 {
-                    1 => acts.Meth1(),
-                    2 => acts.Meth2(),
-                    _ => acts.Meth3()
+                    1 => _acts.Meth1(),
+                    2 => _acts.Meth2(),
+                    _ => _acts.Meth3()
                 };
 
-                if (res.Status == false)
+                if (!res.Status)
                 {
-                    Logger.Instance.Write($"{Types.Error}: Action failed by a reason: {res.ErrMessage}");
+                    _logger.Write(Types.Error, res.ErrMessage);
                 }
             }
 
             var logTxt = Logger.Instance.GetLog();
-            File.WriteAllText("log.txt", logTxt);
+            File.WriteAllText("log.txt", logTxt.ToString());
         }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 
 namespace DzLogger
 {
     public sealed class Logger
     {
         private static readonly Logger _instance = new Logger();
-        private string _logTxt = string.Empty;
+        private StringBuilder _logTxt = new StringBuilder();
 
         // Explicit static constructor to tell C# compiler
         // not to mark type as beforefieldinit
@@ -26,13 +27,19 @@ namespace DzLogger
             }
         }
 
-        public void Write(string mssg)
+        public void Write(Types type, string methodName, string methodMsg)
         {
-            _logTxt += $"{DateTime.Now}: {mssg}\n";
-            Console.WriteLine($"{DateTime.Now}: {mssg}");
+            _logTxt.AppendLine($"{DateTime.UtcNow}: {type}: {methodMsg} {methodName}");
+            Console.WriteLine($"{DateTime.UtcNow}: {type}: {methodMsg} {methodName}");
         }
 
-        public string GetLog()
+        public void Write(Types type, string methodMsg)
+        {
+            _logTxt.AppendLine($"{DateTime.UtcNow}: {type}: {methodMsg}");
+            Console.WriteLine($"{DateTime.UtcNow}: {type}: {methodMsg}");
+        }
+
+        public StringBuilder GetLog()
         {
             return _logTxt;
         }
